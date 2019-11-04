@@ -1,0 +1,8 @@
+## Interface: 70200
+## Author: Blazeflack
+## Version: 0.1
+## Title: |cff1784d1ElvUI|r |cff00b3ffMyPluginName|r
+## Notes: ElvUI Plugin Framework.
+## RequiredDeps: ElvUI
+
+ElvUI_PluginFramework.lua
