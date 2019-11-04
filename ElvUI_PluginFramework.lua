@@ -3,6 +3,10 @@
 		- Change plugin name
 		- Complete Option panel (enable/disable fading, fading color, priority over debuff, ...)
 		- Add raid 40 compatibility
+
+
+	KNOWN BUGS
+	       - Highlighting broken when reloging
 ]]
 
 local E, L, V, P, G = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
