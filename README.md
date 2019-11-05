@@ -24,7 +24,7 @@ Any feedback/help is appreciated !
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
-## Acknowledgments
+## Note
 
 Keep in mind, this is my first attemp at writting a WoW addon, I'm neither a professional developer
 nor experienced in Lua. It is likely to be buggy/not working as expected in many situations.
