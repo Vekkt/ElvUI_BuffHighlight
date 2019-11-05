@@ -1,12 +1,33 @@
-# ElvUI_GlimmerHighlight
-Simple ElvIUI plugin for Glimmer of Light highlighting
+# ElvUI Glimmer of Light Highlight Plugin
 
 This lightweight plugin for ElvUI allows to highlight ElvUI Party and Raid frames 
 when the unit is affected by Glimmer of Light.
 
-# Todo
-Raid 40/ Arena compatibility
+### Required dependencies
 
-More reliable group scanning
+[ElvUI](https://www.tukui.org/download.php?ui=elvui) addon for World of Warcraft retail
 
-Add option to chose specific types of frame for which the plugin is enabled
+### Installing
+
+Like any other addon, place it in your /Interface/Addon folder.
+
+## Contributing
+
+Any feedback/help is appreciated !
+
+
+## Authors
+
+* **Kaalos-Ysondre(FR)**
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Acknowledgments
+
+Keep in mind, this is my first attemp at writting a WoW addon, I'm neither a professional developer
+nor experienced in Lua. It is likely to be buggy/not working as expected in many situations.
+
+Fellow Paladins, enjoy ! :D
+
