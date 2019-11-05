@@ -1,6 +1,7 @@
 --[[
 	TODO
-		- Complete Option panel (layout, priority over debuff, ...)
+		- Complete Option panel (priority over debuff, ...)
+		- More reliable group scanning
 		- Add raid 40 compatibility
 ]]
 
@@ -11,7 +12,7 @@ local addonName, addonTable = ... --See http://www.wowinterface.com/forums/showt
 
 local UF = E:GetModule('UnitFrames')
 
-local eps = 0.001
+local eps = 0.002
 local glimmerID = 287280
 
 
@@ -39,10 +40,11 @@ end
 
 local function GlimmerUpdate(object, unit)
 	if DebuffHighlighted(object) then return nil end
+
 	local glimmerOn = CheckGlimmer(unit)
-	if glimmerOn and (glimmerOn > 5 or not E.db.GH.fadeEnable) then		
+	if glimmerOn and (glimmerOn > E.db.GH.fadeThreshold or not E.db.GH.fadeEnable) then		
 		object.DebuffHighlight:SetVertexColor(E.db.GH.glimmerColor.r, E.db.GH.glimmerColor.g, E.db.GH.glimmerColor.b, E.db.GH.glimmerColor.a)
-	elseif glimmerOn and glimmerOn <= 5 then
+	elseif glimmerOn and glimmerOn <= E.db.GH.fadeThreshold then
 		object.DebuffHighlight:SetVertexColor(E.db.GH.glimmerFadeColor.r, E.db.GH.glimmerFadeColor.g, E.db.GH.glimmerFadeColor.b, E.db.GH.glimmerColor.a)
 	else
 		object.DebuffHighlight:SetVertexColor(0, 0, 0, 0)
@@ -70,7 +72,6 @@ local function UpdateInGroup()
 			if ElvUF_Party.groups[1][i] then
 				local frame = ElvUF_Party.groups[1][i]
 				local unit = frame.unit
-				print(unit)
 				if frame.DebuffHighlight then
 					GlimmerUpdate(frame, unit)
 				end
@@ -89,9 +90,10 @@ end
 --Default options
 P["GH"] = {
 	["enable"] = true,
-	glimmerColor = {r = 0.1, g = 0.6, b = 0.3, a = 1.0},
+	["glimmerColor"] = {r = 0.1, g = 0.6, b = 0.3, a = 1.0},
 	["fadeEnable"] = true,
-	glimmerFadeColor = {r = 0.0, g = 0.4, b = 0.1, a = 1.0},
+	["glimmerFadeColor"] = {r = 0.0, g = 0.4, b = 0.1, a = 1.0},
+	["fadeThreshold"] = 5,
 }
 
 
@@ -102,53 +104,91 @@ function GH:InsertOptions()
 		type = "group",
 		name = "|cff00b3ffGlimmerHighlight|r",
 		args = {
-			enable = {
+			title = {
 				order = 1,
-				type = "toggle",
-				name = "Enable",
-				get = function(info)
-					return E.db.GH.enable
-				end,
-				set = function(info, value)
-					E.db.GH.enable = value
-				end,
+				type = "header",
+				name = "Glimmer of Light Highlight",
 			},
-			glimmerColor = {
+			gr1 = {
 				order = 2,
-				type = "color",
-				name = "Glimmer Color",
-				get = function(info)
-					return E.db.GH.glimmerColor.r, E.db.GH.glimmerColor.g, E.db.GH.glimmerColor.b, E.db.GH.glimmerColor.a
-				end,
-				set = function(info, r, g, b, a)
-					E.db.GH.glimmerColor.r = r
-					E.db.GH.glimmerColor.g = g
-					E.db.GH.glimmerColor.b = b
-				end,
+				type = "group",
+				name = "Main Options",
+				guiInline = true,
+				args = {
+					enable = {
+						order = 3,
+						type = "toggle",
+						name = "Enable",
+						desc = "Enable/Disable the glimmer highlight",
+						get = function(info)
+							return E.db.GH.enable
+						end,
+						set = function(info, value)
+							E.db.GH.enable = value
+						end,
+					},
+					glimmerColor = {
+						order = 4,
+						type = "color",
+						name = "Glimmer Color",
+						get = function(info)
+							return E.db.GH.glimmerColor.r, E.db.GH.glimmerColor.g, E.db.GH.glimmerColor.b, E.db.GH.glimmerColor.a
+						end,
+						set = function(info, r, g, b, a)
+							E.db.GH.glimmerColor.r = r
+							E.db.GH.glimmerColor.g = g
+							E.db.GH.glimmerColor.b = b
+						end,
+					},
+				},
 			},
-			fadeEnable = {
+			gr2 = {
 				order = 3,
-				type = "toggle",
-				name = "Enable Fade",
-				get = function(info)
-					return E.db.GH.fadeEnable
-				end,
-				set = function(info, value)
-					E.db.GH.fadeEnable = value
-				end,
-			},
-			fadeColor = {
-				order = 4,
-				type = "color",
-				name = "Fade Color",
-				get = function(info)
-					return E.db.GH.glimmerFadeColor.r, E.db.GH.glimmerFadeColor.g, E.db.GH.glimmerFadeColor.b, E.db.GH.glimmerFadeColor.a
-				end,
-				set = function(info, r, g, b, a)
-					E.db.GH.glimmerFadeColor.r = r
-					E.db.GH.glimmerFadeColor.g = g
-					E.db.GH.glimmerFadeColor.b = b
-				end,
+				type = "group",
+				name = "Fading Options",
+				guiInline = true,
+				args = {
+					fadeEnable = {
+						order = 7,
+						type = "toggle",
+						name = "Enable Fade",
+						desc = "Enable/Disable the fading highlight",
+						get = function(info)
+							return E.db.GH.fadeEnable
+						end,
+						set = function(info, value)
+							E.db.GH.fadeEnable = value
+						end,
+					},
+					fc = {
+						order = 8,
+						type = "color",
+						name = "Fade Color",
+						get = function(info)
+							return E.db.GH.glimmerFadeColor.r, E.db.GH.glimmerFadeColor.g, E.db.GH.glimmerFadeColor.b, E.db.GH.glimmerFadeColor.a
+						end,
+						set = function(info, r, g, b, a)
+							E.db.GH.glimmerFadeColor.r = r
+							E.db.GH.glimmerFadeColor.g = g
+							E.db.GH.glimmerFadeColor.b = b
+						end,
+					},
+					ft = {
+						order = 9,
+						type = "range",
+						name = "Fading Threshold",
+						desc = "Time remaining at which the glimmer will fade",
+						min = 1,
+						max = 29,
+						step = 1,
+						get = function(info)
+							return E.db.GH.fadeThreshold
+						end,
+						set = function(info, value)
+							E.db.GH.fadeThreshold = value
+						end,
+					}
+				},
 			},
 		},
 	}
