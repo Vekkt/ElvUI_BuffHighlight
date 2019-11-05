@@ -33,8 +33,13 @@ end
 local function DebuffHighlighted(object)
 	local r, g, b, _ = object.DebuffHighlight:GetVertexColor()
 	if r == 0 and g == 0 and b == 0 then return false end
-	local d1 = math.abs(r - E.db.GH.glimmerColor.r) < eps and math.abs(g - E.db.GH.glimmerColor.g) < eps and math.abs(b - E.db.GH.glimmerColor.b) < eps
-	local d2 = math.abs(r - E.db.GH.glimmerFadeColor.r) < eps and math.abs(g - E.db.GH.glimmerFadeColor.g) < eps and math.abs(b - E.db.GH.glimmerFadeColor.b) < eps
+	local d1 = math.abs(r - E.db.GH.glimmerColor.r) < eps 
+				and math.abs(g - E.db.GH.glimmerColor.g) < eps 
+				and math.abs(b - E.db.GH.glimmerColor.b) < eps
+
+	local d2 = math.abs(r - E.db.GH.glimmerFadeColor.r) < eps 
+				and math.abs(g - E.db.GH.glimmerFadeColor.g) < eps 
+				and math.abs(b - E.db.GH.glimmerFadeColor.b) < eps
 	return not (d1 or d2)
 end
 
@@ -42,16 +47,22 @@ local function GlimmerUpdate(object, unit)
 	if DebuffHighlighted(object) then return nil end
 
 	local glimmerOn = CheckGlimmer(unit)
-	if glimmerOn and (glimmerOn > E.db.GH.fadeThreshold or not E.db.GH.fadeEnable) then		
-		object.DebuffHighlight:SetVertexColor(E.db.GH.glimmerColor.r, E.db.GH.glimmerColor.g, E.db.GH.glimmerColor.b, E.db.GH.glimmerColor.a)
+	if glimmerOn and (glimmerOn > E.db.GH.fadeThreshold or not E.db.GH.fadeEnable) then
+		local r = E.db.GH.glimmerColor.r
+		local g = E.db.GH.glimmerColor.g
+		local b = E.db.GH.glimmerColor.b
+		object.DebuffHighlight:SetVertexColor(r, g, b, 1.0)
 	elseif glimmerOn and glimmerOn <= E.db.GH.fadeThreshold then
-		object.DebuffHighlight:SetVertexColor(E.db.GH.glimmerFadeColor.r, E.db.GH.glimmerFadeColor.g, E.db.GH.glimmerFadeColor.b, E.db.GH.glimmerColor.a)
+		local r = E.db.GH.glimmerFadeColor.r
+		local g = E.db.GH.glimmerFadeColor.g
+		local b = E.db.GH.glimmerFadeColor.b
+		object.DebuffHighlight:SetVertexColor(r, g, b, 1.0)
 	else
 		object.DebuffHighlight:SetVertexColor(0, 0, 0, 0)
 	end
 end
 
-
+-- Dirty code
 local function UpdateInRaid()
 	for num, frame in pairs(ElvUF_Raid.groups) do
 		for i = 1, 5 do
@@ -66,6 +77,7 @@ local function UpdateInRaid()
 	end
 end
 
+-- Dirty code
 local function UpdateInGroup()
 	if ElvUF_Party.groups[1] then
 		for i = 1, 5 do
@@ -132,7 +144,10 @@ function GH:InsertOptions()
 						type = "color",
 						name = "Glimmer Color",
 						get = function(info)
-							return E.db.GH.glimmerColor.r, E.db.GH.glimmerColor.g, E.db.GH.glimmerColor.b, E.db.GH.glimmerColor.a
+							local r = E.db.GH.glimmerColor.r
+							local g = E.db.GH.glimmerColor.g
+							local b = E.db.GH.glimmerColor.b
+							return r, g, b, 1.0
 						end,
 						set = function(info, r, g, b, a)
 							E.db.GH.glimmerColor.r = r
@@ -165,7 +180,10 @@ function GH:InsertOptions()
 						type = "color",
 						name = "Fade Color",
 						get = function(info)
-							return E.db.GH.glimmerFadeColor.r, E.db.GH.glimmerFadeColor.g, E.db.GH.glimmerFadeColor.b, E.db.GH.glimmerFadeColor.a
+							local r = E.db.GH.glimmerFadeColor.r
+							local g = E.db.GH.glimmerFadeColor.g
+							local b = E.db.GH.glimmerFadeColor.b
+							return r, g, b, 1.0
 						end,
 						set = function(info, r, g, b, a)
 							E.db.GH.glimmerFadeColor.r = r
