@@ -1,7 +1,7 @@
-## Interface: 70200
-## Author: Blazeflack
+## Interface: 80205
+## Author: Kaalos
 ## Version: 0.1
-## Title: |cff1784d1ElvUI|r |cff00b3ffMyPluginName|r
+## Title: |cff1784d1ElvUI|r |cff00b3ffGlimmerHighlight|r
 ## Notes: ElvUI Plugin Framework.
 ## RequiredDeps: ElvUI
 
