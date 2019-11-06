@@ -1,8 +1,8 @@
 ## Interface: 80205
-## Author: Kaalos
+## Author: Kaalos-Ysondre(FR)
 ## Version: 0.1
 ## Title: |cff1784d1ElvUI|r |cff00b3ffGlimmerHighlight|r
-## Notes: ElvUI Plugin Framework.
+## Notes: ElvUI Glimmer Highlight plugin
 ## RequiredDeps: ElvUI
 
-ElvUI_PluginFramework.lua
+ElvUI_GlimmerHighlight.lua
