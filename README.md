@@ -9,7 +9,9 @@ when the unit is affected by Glimmer of Light.
 
 ### Installing
 
-Like any other addon, place it in your /Interface/Addon folder.
+Hit "Clone or download" button then "Download ZIP".
+Place the "ElvUI_GlimmerHighlight" folder (not "ElvUI_GlimmerHighlight-master")
+in your /Interface/Addon folder.
 
 ## Contributing
 
