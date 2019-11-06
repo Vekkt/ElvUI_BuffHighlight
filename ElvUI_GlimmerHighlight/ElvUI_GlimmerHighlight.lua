@@ -13,17 +13,16 @@ local addonName, addonTable = ... --See http://www.wowinterface.com/forums/showt
 local UF = E:GetModule('UnitFrames')
 
 local eps = 0.002
-local glimmerID = 287280
-
 
 local function CheckGlimmer(unit)
 	if not unit or not UnitCanAssist("player", unit) then return nil end
 	local i = 1
+	local trackedBuffID = E.db.GH.trackedBuffID
 	while true do
 		local _, texture,_,_,_, expire, source,_,_, spellID = UnitAura(unit, i, "HELPFUL")
 		if not texture then break end
 
-		if(spellID == glimmerID and source == "player") then
+		if(spellID == trackedBuffID and source == "player") then
 			return expire - GetTime()
 		end
 		i = i + 1
@@ -98,6 +97,20 @@ local function Update()
 	elseif IsInGroup() then UpdateInGroup() end
 end
 
+local function nameFromID(spellID)
+	name, _, _, _, _, _, _ = GetSpellInfo(spellID)
+	return name
+end
+
+local function retrieveID(spellNameOrID)
+	name, _, _, _, _, _, spellID = GetSpellInfo(spellNameOrID)
+	return spellID
+end
+
+local function retrieveIcon(spellName)
+	_, _, icon, _, _, _, _ = GetSpellInfo(spellNameOrID)
+	return icon
+end
 
 --Default options
 P["GH"] = {
@@ -106,8 +119,8 @@ P["GH"] = {
 	["fadeEnable"] = true,
 	["glimmerFadeColor"] = {r = 0.0, g = 0.4, b = 0.1, a = 1.0},
 	["fadeThreshold"] = 5,
+	["trackedBuffID"] = 287280,
 }
-
 
 --This function inserts our GUI table into the ElvUI Config. You can read about AceConfig here: http://www.wowace.com/addons/ace3/pages/ace-config-3-0-options-tables/
 function GH:InsertOptions()
@@ -208,6 +221,29 @@ function GH:InsertOptions()
 					}
 				},
 			},
+			gr3 = {
+				order = 3,
+				type = "group",
+				name = "Tracked spell",
+				guiInline = true,
+				args = {
+					changeSpell = {
+						order = 10,
+						type = "input",
+						name = "Buff ID",
+						width = 100,
+						get = function(info)
+							local name = nameFromID(E.db.GH.trackedBuffID)
+							local id = retrieveID(E.db.GH.trackedBuffID)
+							return string.format("%s (%s)", name, id)
+						end,
+						set = function(info, data)
+							newID = retrieveID(data)
+							if newID then E.db.GH.trackedBuffID = newID end
+						end,
+					},
+				},
+			}
 		},
 	}
 end
