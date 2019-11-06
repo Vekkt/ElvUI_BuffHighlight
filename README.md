@@ -6,6 +6,7 @@ when the unit is affected by Glimmer of Light.
 ### Required dependencies
 
 [ElvUI](https://www.tukui.org/download.php?ui=elvui) addon for World of Warcraft retail
+
 It is recommanded to play with uniform health colors (i.e. not class color health)
 
 ### Installing
