@@ -3,6 +3,11 @@
 This lightweight plugin for ElvUI allows to highlight ElvUI Party and Raid frames 
 when the unit is affected by the specified buff.
 
+![unitframes](https://raw.githubusercontent.com/Vekkt/ElvUI_BuffHighlight/master/Media/UnitFrames.png)
+
+![options](https://raw.githubusercontent.com/Vekkt/ElvUI_BuffHighlight/master/Media/OptionsPanel.png)
+
+
 ### Required dependencies
 
 [ElvUI](https://www.tukui.org/download.php?ui=elvui) addon for World of Warcraft retail
