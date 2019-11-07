@@ -122,7 +122,6 @@ local function getBuffList()
 	local str = "\nCurrently tracked buffs:\n"
 	if not E.db.GH.trackedBuffID then return str end
 	for id, name in pairs(E.db.GH.trackedBuffID) do
-		print(id, name)
 		if name then 
 			str = str..string.format("    - %s (%s)\n", name, id)
 		end
