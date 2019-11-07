@@ -1,7 +1,7 @@
 # ElvUI Buff of Light Highlight Plugin
 
 This lightweight plugin for ElvUI allows to highlight ElvUI Party and Raid frames 
-when the unit is affected by Buff of Light.
+when the unit is affected by the specified buff.
 
 ### Required dependencies
 
