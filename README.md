@@ -1,7 +1,7 @@
-# ElvUI Glimmer of Light Highlight Plugin
+# ElvUI Buff of Light Highlight Plugin
 
 This lightweight plugin for ElvUI allows to highlight ElvUI Party and Raid frames 
-when the unit is affected by Glimmer of Light.
+when the unit is affected by Buff of Light.
 
 ### Required dependencies
 
@@ -12,7 +12,7 @@ It is recommanded to play with uniform health colors (i.e. not class color healt
 ### Installing
 
 Hit "Clone or download" button then "Download ZIP".
-Place the "ElvUI_GlimmerHighlight" folder (not "ElvUI_GlimmerHighlight-master")
+Place the "ElvUI_BuffHighlight" folder (not "ElvUI_BuffHighlight-master")
 in your /Interface/Addon folder.
 
 ## Contributing
