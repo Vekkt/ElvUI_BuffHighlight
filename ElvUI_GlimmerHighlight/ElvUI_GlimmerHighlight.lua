@@ -1,6 +1,5 @@
 --[[
 	TODO
-		- Complete Option panel (priority over debuff, ...)
 		- More reliable group scanning
 		- Add raid 40 compatibility
 ]]
