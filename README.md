@@ -12,6 +12,7 @@ It is recommanded to play with uniform health colors (i.e. not class color healt
 ### Installing
 
 Hit "Clone or download" button then "Download ZIP".
+
 Place the "ElvUI_BuffHighlight" folder (not "ElvUI_BuffHighlight-master")
 in your /Interface/Addon folder.
 
