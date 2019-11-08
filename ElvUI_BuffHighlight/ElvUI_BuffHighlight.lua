@@ -56,12 +56,24 @@ local function BuffUpdate(object, unit)
 		local r = E.db.GH.buffColor.r
 		local g = E.db.GH.buffColor.g
 		local b = E.db.GH.buffColor.b
-		object.DebuffHighlight:SetVertexColor(r, g, b, 1.0)
+		local a = E.db.GH.buffColor.a
+		
+		if E.db.GH.colorBackdrop then 
+			object.DebuffHighlight:SetVertexColor(r, g, b, a)
+		else
+			object.Health:SetStatusBarColor(r, g, b, a)
+		end
 	elseif buffOn and buffOn <= E.db.GH.fadeThreshold then
 		local r = E.db.GH.buffFadeColor.r
 		local g = E.db.GH.buffFadeColor.g
 		local b = E.db.GH.buffFadeColor.b
-		object.DebuffHighlight:SetVertexColor(r, g, b, 1.0)
+		local a = E.db.GH.buffFadeColor.a
+
+		if E.db.GH.colorBackdrop then 
+			object.DebuffHighlight:SetVertexColor(r, g, b, a)
+		else
+			object.Health:SetStatusBarColor(r, g, b, a)
+		end
 	else
 		object.DebuffHighlight:SetVertexColor(0, 0, 0, 0)
 	end
@@ -138,6 +150,7 @@ end
 P["GH"] = {
 	["enable"] = true,
 	["buffColor"] = {r = 0.1, g = 0.6, b = 0.3, a = 1.0},
+	["colorBackdrop"] = false,
 	["fadeEnable"] = true,
 	["buffFadeColor"] = {r = 0.0, g = 0.4, b = 0.1, a = 1.0},
 	["fadeThreshold"] = 5,
@@ -179,16 +192,31 @@ function GH:InsertOptions()
 						order = 4,
 						type = "color",
 						name = "Highlight Color",
+						hasAlpha = true,
 						get = function(info)
 							local r = E.db.GH.buffColor.r
 							local g = E.db.GH.buffColor.g
 							local b = E.db.GH.buffColor.b
-							return r, g, b, 1.0
+							local a = E.db.GH.buffColor.a
+							return r, g, b, a
 						end,
 						set = function(info, r, g, b, a)
 							E.db.GH.buffColor.r = r
 							E.db.GH.buffColor.g = g
 							E.db.GH.buffColor.b = b
+							E.db.GH.buffColor.a = a
+						end,
+					},
+					colorBackdrop = {
+						order = 5,
+						type = "toggle",
+						name = "Colored backdrop",
+						get = function(info)
+							return E.db.GH.colorBackdrop
+						end,
+						set = function(info, value)
+							E.db.GH.colorBackdrop = value
+							Update()
 						end,
 					},
 				},
@@ -215,16 +243,19 @@ function GH:InsertOptions()
 						order = 8,
 						type = "color",
 						name = "Fade Color",
+						hasAlpha = true,
 						get = function(info)
 							local r = E.db.GH.buffFadeColor.r
 							local g = E.db.GH.buffFadeColor.g
 							local b = E.db.GH.buffFadeColor.b
-							return r, g, b, 1.0
+							local a = E.db.GH.buffFadeColor.a
+							return r, g, b, a
 						end,
 						set = function(info, r, g, b, a)
 							E.db.GH.buffFadeColor.r = r
 							E.db.GH.buffFadeColor.g = g
 							E.db.GH.buffFadeColor.b = b
+							E.db.GH.buffFadeColor.a = a
 						end,
 					},
 					ft = {
