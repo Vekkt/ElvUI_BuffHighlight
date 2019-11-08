@@ -51,13 +51,6 @@ end
 local function BuffUpdate(object, unit)
 	if DebuffHighlighted(object) then return nil end
 
-	-- for k, v in pairs(object.Health) do
-	-- 	print(k)
-	-- end
-	-- print("----------------")
-	-- print(object.Health)
-	-- print("----------------")
-
 	local buffOn = CheckBuff(unit)
 	if buffOn and (buffOn > E.db.GH.fadeThreshold + 1 or not E.db.GH.fadeEnable) then
 		local r = E.db.GH.buffColor.r
