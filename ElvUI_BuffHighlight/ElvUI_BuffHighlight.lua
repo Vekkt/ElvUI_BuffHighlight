@@ -51,8 +51,15 @@ end
 local function BuffUpdate(object, unit)
 	if DebuffHighlighted(object) then return nil end
 
+	-- for k, v in pairs(object.Health) do
+	-- 	print(k)
+	-- end
+	-- print("----------------")
+	-- print(object.Health)
+	-- print("----------------")
+
 	local buffOn = CheckBuff(unit)
-	if buffOn and (buffOn > E.db.GH.fadeThreshold or not E.db.GH.fadeEnable) then
+	if buffOn and (buffOn > E.db.GH.fadeThreshold + 1 or not E.db.GH.fadeEnable) then
 		local r = E.db.GH.buffColor.r
 		local g = E.db.GH.buffColor.g
 		local b = E.db.GH.buffColor.b
@@ -75,7 +82,13 @@ local function BuffUpdate(object, unit)
 			object.Health:SetStatusBarColor(r, g, b, a)
 		end
 	else
-		object.DebuffHighlight:SetVertexColor(0, 0, 0, 0)
+		if E.db.GH.colorBackdrop then 
+			object.DebuffHighlight:SetVertexColor(0, 0, 0, 0)
+		else
+			local colors = E.db.unitframe.colors
+			local r, g, b = colors.health.r, colors.health.g, colors.health.b
+			object.Health:SetStatusBarColor(r, g, b, 1.0)
+		end
 	end
 end
 
