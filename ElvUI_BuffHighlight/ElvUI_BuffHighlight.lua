@@ -52,7 +52,7 @@ local function BuffUpdate(object, unit)
 	if DebuffHighlighted(object) then return nil end
 
 	local buffOn = CheckBuff(unit)
-	if buffOn and (buffOn > E.db.GH.fadeThreshold + 1 or not E.db.GH.fadeEnable) then
+	if buffOn and (buffOn > E.db.GH.fadeThreshold or not E.db.GH.fadeEnable) then
 		local r = E.db.GH.buffColor.r
 		local g = E.db.GH.buffColor.g
 		local b = E.db.GH.buffColor.b
