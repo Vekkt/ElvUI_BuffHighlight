@@ -15,7 +15,7 @@ local UF = E:GetModule('UnitFrames')
 local eps = 0.002
 
 local function isTracked(spellID)
-	for id, name in pairs(E.db.GH.trackedBuffID) do
+	for id, name in pairs(E.db.GH.trackedBuffsID) do
 		if name and spellID == tonumber(id) then return true end
 	end
 	return false
@@ -138,8 +138,8 @@ end
 
 local function getBuffList()
 	local str = "\nCurrently tracked buffs:\n"
-	if not E.db.GH.trackedBuffID then return str end
-	for id, name in pairs(E.db.GH.trackedBuffID) do
+	if not E.db.GH.trackedBuffsID then return str end
+	for id, name in pairs(E.db.GH.trackedBuffsID) do
 		if name then 
 			str = str..string.format("    - %s (%s)\n", name, id)
 		end
@@ -160,7 +160,7 @@ P["GH"] = {
 	["fadeEnable"] = true,
 	["buffFadeColor"] = {r = 0.0, g = 0.4, b = 0.1, a = 1.0},
 	["fadeThreshold"] = 5,
-	["trackedBuffID"] = { ["287280"] = "Glimmer of Light", },
+	["trackedBuffsID"] = { ["287280"] = "Glimmer of Light", },
 	["buffList"] = "\nCurrently tracked buffs:\n    - Glimmer of Light (287280)\n",
 }
 
@@ -299,7 +299,7 @@ function GH:InsertOptions()
 							local newID = retrieveID(data)
 							local name = nameFromID(newID)
 							if newID and name then 
-								E.db.GH.trackedBuffID[tostring(newID)] = name
+								E.db.GH.trackedBuffsID[tostring(newID)] = name
 							end
 							updateBuffList()
 						end,
@@ -313,7 +313,7 @@ function GH:InsertOptions()
 							return "Buff ID"
 						end,
 						set = function(info, data)
-							E.db.GH.trackedBuffID[tostring(data)] = nil
+							E.db.GH.trackedBuffsID[tostring(data)] = nil
 							updateBuffList()
 						end,
 					},
