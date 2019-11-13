@@ -54,8 +54,8 @@ local function DebuffHighlighted(object)
 	return not (d1 or d2)
 end
 
-local function BuffUpdate(object, unit)
-	local buffOn = CheckBuff(unit)
+local function BuffUpdate(object)
+	local buffOn = CheckBuff(object.unit)
 	if DebuffHighlighted(object) then 
 		if buffOn then resetHealthBarColor(object) end
 		return nil 
@@ -92,40 +92,20 @@ local function BuffUpdate(object, unit)
 	end
 end
 
--- Dirty code
-local function UpdateInRaid()
-	for num, frame in pairs(ElvUF_Raid.groups) do
-		for i = 1, 5 do
-			if ElvUF_Raid.groups[num][i] then
-				local frame = ElvUF_Raid.groups[num][i]
-				local unit = frame.unit
-				if frame.DebuffHighlight then
-					BuffUpdate(frame, unit)
-				end
-			end
-		end
-	end
-end
-
--- Dirty code
-local function UpdateInGroup()
-	if ElvUF_Party.groups[1] then
-		for i = 1, 5 do
-			if ElvUF_Party.groups[1][i] then
-				local frame = ElvUF_Party.groups[1][i]
-				local unit = frame.unit
-				if frame.DebuffHighlight then
-					BuffUpdate(frame, unit)
-				end
-			end
-		end
-	end
-end
-
 local function Update()
-	if not E.db.GH or not E.db.GH.enable then return nil end
-	if IsInRaid() then UpdateInRaid()
-	elseif IsInGroup() then UpdateInGroup() end
+	for name, header in pairs(UF.headers) do
+		if name ~= "tank" and name ~= "assist" then
+				for i = 1, header:GetNumChildren() do
+				local group = select(i, header:GetChildren())
+				for j = 1, group:GetNumChildren() do
+					local frame = select(j, group:GetChildren())
+					if frame and frame.Health and frame.unit then
+						BuffUpdate(frame)
+					end
+				end
+			end
+		end
+	end
 end
 
 local function nameFromID(spellID)
@@ -303,10 +283,9 @@ function GH:InsertOptions()
 							return "Buff ID"
 						end,
 						set = function(info, data)
-							local newID = retrieveID(data)
-							local name = nameFromID(newID)
-							if newID and name then 
-								E.db.GH.trackedBuffsID[tostring(newID)] = name
+							local newName, _, _, _, _, _, newID = GetSpellInfo(data)
+							if newID and newName then 
+								E.db.GH.trackedBuffsID[tostring(newID)] = newName
 							end
 							updateBuffList()
 						end,

@@ -1,4 +1,4 @@
-# ElvUI Buff of Light Highlight Plugin
+# ElvUI Buff Highlight Plugin
 
 This lightweight plugin for ElvUI allows to highlight ElvUI Party and Raid frames 
 when the unit is affected by the specified buff.
@@ -39,5 +39,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 Keep in mind, this is my first attemp at writting a WoW addon, I'm neither a professional developer
 nor experienced in Lua. It is likely to be buggy/not working as expected in many situations.
 
-Fellow Paladins, enjoy ! :D
+Enjoy ! :D
 
