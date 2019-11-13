@@ -108,21 +108,6 @@ local function Update()
 	end
 end
 
-local function nameFromID(spellID)
-	name, _, _, _, _, _, _ = GetSpellInfo(spellID)
-	return name
-end
-
-local function retrieveID(spellNameOrID)
-	name, _, _, _, _, _, spellID = GetSpellInfo(spellNameOrID)
-	return spellID
-end
-
-local function retrieveIcon(spellName)
-	_, _, icon, _, _, _, _ = GetSpellInfo(spellNameOrID)
-	return icon
-end
-
 local function getBuffList()
 	local str = "\nCurrently tracked buffs:\n"
 	if not E.db.GH.trackedBuffsID then return str end
