@@ -1,21 +1,22 @@
 --[[
 	TODO
 		- Complete Option panel (priority over debuff, ...)
-		- More reliable group scanning
-		- Add raid 40 compatibility
 ]]
 
 local E, L, V, P, G = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
-local GH = E:NewModule('BuffHighlight', 'AceHook-3.0', 'AceEvent-3.0', 'AceTimer-3.0'); --Create a plugin within ElvUI and adopt AceHook-3.0, AceEvent-3.0 and AceTimer-3.0. We can make use of these later.
-local EP = LibStub("LibElvUIPlugin-1.0") --We can use this to automatically insert our GUI tables when ElvUI_Config is loaded.
-local addonName, addonTable = ... --See http://www.wowinterface.com/forums/showthread.php?t=51502&p=304704&postcount=2
-
+local BH = E:NewModule('BuffHighlight', 'AceHook-3.0', 'AceEvent-3.0', 'AceTimer-3.0'); 
+local EP = LibStub("LibElvUIPlugin-1.0") 
+local addonName, addonTable = ... 
 local UF = E:GetModule('UnitFrames')
+
+
+local abs = math.abs
+local format = string.format
 
 local eps = 0.002
 
 local function isTracked(spellID)
-	for id, name in pairs(E.db.GH.trackedBuffsID) do
+	for id, name in pairs(E.db.BH.trackedBuffsID) do
 		if name and spellID == tonumber(id) then return true end
 	end
 	return false
@@ -44,13 +45,13 @@ end
 local function DebuffHighlighted(object)
 	local r, g, b, _ = object.DebuffHighlight:GetVertexColor()
 	if r == 0 and g == 0 and b == 0 then return false end
-	local d1 = math.abs(r - E.db.GH.buffColor.r) < eps 
-				and math.abs(g - E.db.GH.buffColor.g) < eps 
-				and math.abs(b - E.db.GH.buffColor.b) < eps
+	local d1 = abs(r - E.db.BH.buffColor.r) < eps 
+				and abs(g - E.db.BH.buffColor.g) < eps 
+				and abs(b - E.db.BH.buffColor.b) < eps
 
-	local d2 = math.abs(r - E.db.GH.buffFadeColor.r) < eps 
-				and math.abs(g - E.db.GH.buffFadeColor.g) < eps 
-				and math.abs(b - E.db.GH.buffFadeColor.b) < eps
+	local d2 = abs(r - E.db.BH.buffFadeColor.r) < eps 
+				and abs(g - E.db.BH.buffFadeColor.g) < eps 
+				and abs(b - E.db.BH.buffFadeColor.b) < eps
 	return not (d1 or d2)
 end
 
@@ -61,30 +62,30 @@ local function BuffUpdate(object)
 		return nil 
 	end
 
-	if buffOn and (buffOn > E.db.GH.fadeThreshold or not E.db.GH.fadeEnable) then
-		local r = E.db.GH.buffColor.r
-		local g = E.db.GH.buffColor.g
-		local b = E.db.GH.buffColor.b
-		local a = E.db.GH.buffColor.a
+	if buffOn and (buffOn > E.db.BH.fadeThreshold or not E.db.BH.fadeEnable) then
+		local r = E.db.BH.buffColor.r
+		local g = E.db.BH.buffColor.g
+		local b = E.db.BH.buffColor.b
+		local a = E.db.BH.buffColor.a
 		
-		if E.db.GH.colorBackdrop then 
+		if E.db.BH.colorBackdrop then 
 			object.DebuffHighlight:SetVertexColor(r, g, b, a)
 		else
 			object.Health:SetStatusBarColor(r, g, b, a)
 		end
-	elseif buffOn and buffOn <= E.db.GH.fadeThreshold then
-		local r = E.db.GH.buffFadeColor.r
-		local g = E.db.GH.buffFadeColor.g
-		local b = E.db.GH.buffFadeColor.b
-		local a = E.db.GH.buffFadeColor.a
+	elseif buffOn and buffOn <= E.db.BH.fadeThreshold then
+		local r = E.db.BH.buffFadeColor.r
+		local g = E.db.BH.buffFadeColor.g
+		local b = E.db.BH.buffFadeColor.b
+		local a = E.db.BH.buffFadeColor.a
 
-		if E.db.GH.colorBackdrop then 
+		if E.db.BH.colorBackdrop then 
 			object.DebuffHighlight:SetVertexColor(r, g, b, a)
 		else
 			object.Health:SetStatusBarColor(r, g, b, a)
 		end
 	else
-		if E.db.GH.colorBackdrop then 
+		if E.db.BH.colorBackdrop then 
 			object.DebuffHighlight:SetVertexColor(0, 0, 0, 0)
 		else
 			resetHealthBarColor(object)
@@ -95,7 +96,7 @@ end
 local function Update()
 	for name, header in pairs(UF.headers) do
 		if name ~= "tank" and name ~= "assist" then
-				for i = 1, header:GetNumChildren() do
+			for i = 1, header:GetNumChildren() do
 				local group = select(i, header:GetChildren())
 				for j = 1, group:GetNumChildren() do
 					local frame = select(j, group:GetChildren())
@@ -110,22 +111,22 @@ end
 
 local function getBuffList()
 	local str = "\nCurrently tracked buffs:\n"
-	if not E.db.GH.trackedBuffsID then return str end
-	for id, name in pairs(E.db.GH.trackedBuffsID) do
+	if not E.db.BH.trackedBuffsID then return str end
+	for id, name in pairs(E.db.BH.trackedBuffsID) do
 		if name then 
-			str = str..string.format("    - %s (%s)\n", name, id)
+			str = str..format("    - %s (%s)\n", name, id)
 		end
 	end
 	return str
 end
 
 local function updateBuffList()
-	E.db.GH.buffList = getBuffList()
-	E.Options.args.GH.args.gr3.args.trackedSpells.name = E.db.GH.buffList
+	E.db.BH.buffList = getBuffList()
+	E.Options.args.BH.args.gr3.args.trackedSpells.name = E.db.BH.buffList
 end
 
 --Default options
-P["GH"] = {
+P["BH"] = {
 	["enable"] = true,
 	["buffColor"] = {r = 0.1, g = 0.6, b = 0.3, a = 1.0},
 	["colorBackdrop"] = false,
@@ -137,8 +138,8 @@ P["GH"] = {
 }
 
 --This function inserts our GUI table into the ElvUI Config. You can read about AceConfig here: http://www.wowace.com/addons/ace3/pages/ace-config-3-0-options-tables/
-function GH:InsertOptions()
-	E.Options.args.GH = {
+function BH:InsertOptions()
+	E.Options.args.BH = {
 		order = 100,
 		type = "group",
 		name = "|cff00b3ffBuffHighlight|r",
@@ -160,10 +161,10 @@ function GH:InsertOptions()
 						name = "Enable",
 						desc = "Enable/Disable the buff highlight",
 						get = function(info)
-							return E.db.GH.enable
+							return E.db.BH.enable
 						end,
 						set = function(info, value)
-							E.db.GH.enable = value
+							E.db.BH.enable = value
 						end,
 					},
 					buffColor = {
@@ -172,17 +173,17 @@ function GH:InsertOptions()
 						name = "Highlight Color",
 						hasAlpha = true,
 						get = function(info)
-							local r = E.db.GH.buffColor.r
-							local g = E.db.GH.buffColor.g
-							local b = E.db.GH.buffColor.b
-							local a = E.db.GH.buffColor.a
+							local r = E.db.BH.buffColor.r
+							local g = E.db.BH.buffColor.g
+							local b = E.db.BH.buffColor.b
+							local a = E.db.BH.buffColor.a
 							return r, g, b, a
 						end,
 						set = function(info, r, g, b, a)
-							E.db.GH.buffColor.r = r
-							E.db.GH.buffColor.g = g
-							E.db.GH.buffColor.b = b
-							E.db.GH.buffColor.a = a
+							E.db.BH.buffColor.r = r
+							E.db.BH.buffColor.g = g
+							E.db.BH.buffColor.b = b
+							E.db.BH.buffColor.a = a
 						end,
 					},
 					colorBackdrop = {
@@ -190,10 +191,10 @@ function GH:InsertOptions()
 						type = "toggle",
 						name = "Colored backdrop",
 						get = function(info)
-							return E.db.GH.colorBackdrop
+							return E.db.BH.colorBackdrop
 						end,
 						set = function(info, value)
-							E.db.GH.colorBackdrop = value
+							E.db.BH.colorBackdrop = value
 							Update()
 						end,
 					},
@@ -211,10 +212,10 @@ function GH:InsertOptions()
 						name = "Enable Fade",
 						desc = "Enable/Disable the fading highlight",
 						get = function(info)
-							return E.db.GH.fadeEnable
+							return E.db.BH.fadeEnable
 						end,
 						set = function(info, value)
-							E.db.GH.fadeEnable = value
+							E.db.BH.fadeEnable = value
 						end,
 					},
 					fc = {
@@ -223,17 +224,17 @@ function GH:InsertOptions()
 						name = "Fade Color",
 						hasAlpha = true,
 						get = function(info)
-							local r = E.db.GH.buffFadeColor.r
-							local g = E.db.GH.buffFadeColor.g
-							local b = E.db.GH.buffFadeColor.b
-							local a = E.db.GH.buffFadeColor.a
+							local r = E.db.BH.buffFadeColor.r
+							local g = E.db.BH.buffFadeColor.g
+							local b = E.db.BH.buffFadeColor.b
+							local a = E.db.BH.buffFadeColor.a
 							return r, g, b, a
 						end,
 						set = function(info, r, g, b, a)
-							E.db.GH.buffFadeColor.r = r
-							E.db.GH.buffFadeColor.g = g
-							E.db.GH.buffFadeColor.b = b
-							E.db.GH.buffFadeColor.a = a
+							E.db.BH.buffFadeColor.r = r
+							E.db.BH.buffFadeColor.g = g
+							E.db.BH.buffFadeColor.b = b
+							E.db.BH.buffFadeColor.a = a
 						end,
 					},
 					ft = {
@@ -245,10 +246,10 @@ function GH:InsertOptions()
 						max = 29,
 						step = 1,
 						get = function(info)
-							return E.db.GH.fadeThreshold
+							return E.db.BH.fadeThreshold
 						end,
 						set = function(info, value)
-							E.db.GH.fadeThreshold = value
+							E.db.BH.fadeThreshold = value
 						end,
 					}
 				},
@@ -270,7 +271,7 @@ function GH:InsertOptions()
 						set = function(info, data)
 							local newName, _, _, _, _, _, newID = GetSpellInfo(data)
 							if newID and newName then 
-								E.db.GH.trackedBuffsID[tostring(newID)] = newName
+								E.db.BH.trackedBuffsID[tostring(newID)] = newName
 							end
 							updateBuffList()
 						end,
@@ -284,14 +285,14 @@ function GH:InsertOptions()
 							return "Buff ID"
 						end,
 						set = function(info, data)
-							E.db.GH.trackedBuffsID[tostring(data)] = nil
+							E.db.BH.trackedBuffsID[tostring(data)] = nil
 							updateBuffList()
 						end,
 					},
 					trackedSpells = {
 						order = 14,
 						type = "description",
-						name = E.db.GH.buffList,
+						name = E.db.BH.buffList,
 					}
 				},
 			}
@@ -299,12 +300,12 @@ function GH:InsertOptions()
 	}
 end
 
-function GH:Initialize()
+function BH:Initialize()
 	--Register plugin so options are properly inserted when config is loaded
-	EP:RegisterPlugin(addonName, GH.InsertOptions)
+	EP:RegisterPlugin(addonName, BH.InsertOptions)
 end
 
 local f = CreateFrame("Frame")
 f:SetScript("OnUpdate", Update)
 
-E:RegisterModule(GH:GetName()) --Register the module with ElvUI. ElvUI will now call GH:Initialize() when ElvUI is ready to load our plugin.
+E:RegisterModule(BH:GetName()) --Register the module with ElvUI. ElvUI will now call BH:Initialize() when ElvUI is ready to load our plugin.
