@@ -94,14 +94,16 @@ local function BuffUpdate(object)
 end
 
 local function Update()
-	for name, header in pairs(UF.headers) do
-		if name ~= "tank" and name ~= "assist" then
-			for i = 1, header:GetNumChildren() do
-				local group = select(i, header:GetChildren())
-				for j = 1, group:GetNumChildren() do
-					local frame = select(j, group:GetChildren())
-					if frame and frame.Health and frame.unit then
-						BuffUpdate(frame)
+	if E.db.BH.enable then
+		for name, header in pairs(UF.headers) do
+			if name ~= "tank" and name ~= "assist" then
+				for i = 1, header:GetNumChildren() do
+					local group = select(i, header:GetChildren())
+					for j = 1, group:GetNumChildren() do
+						local frame = select(j, group:GetChildren())
+						if frame and frame.Health and frame.unit then
+							BuffUpdate(frame)
+						end
 					end
 				end
 			end
