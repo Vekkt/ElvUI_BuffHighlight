@@ -93,8 +93,15 @@ local function BuffUpdate(object)
 	end
 end
 
+local function usingClassColor()
+	local val = E.db.unitframe.colors.healthclass
+	if val ~= nil then
+		return val
+	end
+end
+
 local function Update()
-	if E.db.BH.enable then
+	if E.db.BH.enable and not usingClassColor() then
 		for name, header in pairs(UF.headers) do
 			if name ~= "tank" and name ~= "assist" then
 				for i = 1, header:GetNumChildren() do
@@ -110,6 +117,7 @@ local function Update()
 		end
 	end
 end
+
 
 local function getBuffList()
 	local str = "\nCurrently tracked buffs:\n"
@@ -305,6 +313,10 @@ end
 function BH:Initialize()
 	--Register plugin so options are properly inserted when config is loaded
 	EP:RegisterPlugin(addonName, BH.InsertOptions)
+	
+	if E.db.BH.enable and usingClassColor() then
+		print("|cff1784d1ElvUI|r |cff00b3ffBuffHighlight|r: You are currently using class heath colors. Please disable this option in order to BuffHilight to work. (UnitFrames > General Options > Colors > Class Health)")
+	end
 end
 
 local f = CreateFrame("Frame")
