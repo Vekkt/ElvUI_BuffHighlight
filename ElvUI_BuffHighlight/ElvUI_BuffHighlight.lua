@@ -319,7 +319,30 @@ function BH:Initialize()
 	end
 end
 
-local f = CreateFrame("Frame")
-f:SetScript("OnUpdate", Update)
+
+
+
+
+local f = CreateFrame("Frame");
+f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+f:SetScript("OnEvent", function(self, event)
+	-- pass a variable number of arguments
+	self:OnEvent(event, CombatLogGetCurrentEventInfo())
+end)
+
+function f:OnEvent(event, ...)
+	if event == "COMBAT_LOG_EVENT_UNFILTERED" then
+		local timestamp, subevent, _, sourceGUID, sName, sourceFlags, sourceRaidFlags, destGUID, dName, destFlags, destRaidFlags, espellid = ...
+		if subevent == "SPELL_AURA_APPLIED" or subevent == "SPELL_AURA_REMOVED" or subevent == "SPELL_CAST_SUCCESS" then
+			if sName == UnitName("player") and (UnitInParty(dName) == true or UnitInRaid(dName) == true) then
+				if isTracked(espellid) then
+					Update()
+				end
+			end
+		end	
+	end	
+end
+
+
 
 E:RegisterModule(BH:GetName()) --Register the module with ElvUI. ElvUI will now call BH:Initialize() when ElvUI is ready to load our plugin.
