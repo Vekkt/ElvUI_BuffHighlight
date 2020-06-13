@@ -51,9 +51,9 @@ local function resetHealthBarColor(frame)
 end
 
 local function updateHealth(frame, spellID)
+	if not E.db.BH.spells[spellID] then return end
 	if frame.BuffHighlightActive then
 		local t = E.db.BH.spells[spellID].glowColor
-		if not t then return end
 		local r, g, b, a = t.r, t.g, t.b, t.a
 		
 		if E.db.BH.colorBackdrop then 
@@ -63,7 +63,6 @@ local function updateHealth(frame, spellID)
 		frame:SetStatusBarColor(r, g, b, a)
 	elseif frame.BuffHighlightFaderActive then
 		local t = E.db.BH.spells[spellID].fadeColor
-		if not t then return end
 		local r, g, b, a = t.r, t.g, t.b, t.a
 
 		if E.db.BH.colorBackdrop then 
@@ -78,7 +77,8 @@ local function updateFrame(frame, unit)
 	if not frame then return end
 	if not E.db.BH.overwriteDBH and DebuffHighlighted(frame) then 
 		frame.BuffHighlightActive = false
-		frame.BuffHighlightFaderActive = falsereturn 
+		frame.BuffHighlightFaderActive = false
+		return 
 	end
 
 	local buffDuration, spellID = CheckBuff(unit)
@@ -124,7 +124,7 @@ function BH:Initialize()
 				for j = 1, group:GetNumChildren() do
 					local frame = select(j, group:GetChildren())
 					if frame and frame.Health and frame.unit then
-						hooksecurefunc(frame.Health, "PostUpdateColor", function(self, unit, ...) updateHealth(self) end)
+						hooksecurefunc(frame.Health, "PostUpdateColor", function(self, unit, ...) updateFrame(self, unit) end)
 					end
 				end
 			end
