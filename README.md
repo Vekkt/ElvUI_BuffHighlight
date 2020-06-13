@@ -5,7 +5,7 @@ when the unit is affected by the specified buff.
 
 ![unitframes](https://raw.githubusercontent.com/Vekkt/ElvUI_BuffHighlight/master/Media/UnitFrames.png)
 
-![options](https://raw.githubusercontent.com/Vekkt/ElvUI_BuffHighlight/master/Media/OptionsPanel.png)
+![options](https://github.com/Vekkt/ElvUI_BuffHighlight/blob/master/Media/ElvUI_BH_option_menu.PNG)
 
 
 ### Required dependencies
