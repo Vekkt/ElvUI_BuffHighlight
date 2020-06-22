@@ -57,7 +57,7 @@ function BH:GetOptions()
 					overwriteDBH = {
 						order = 3,
 						type = "toggle",
-						name = "Overwrite debuff highlight",
+						name = "Overwrite debuff",
 						get = function(info)
 							return E.db.BH.overwriteDBH
 						end,
@@ -65,6 +65,21 @@ function BH:GetOptions()
 							E.db.BH.overwriteDBH = value
 						end,
 					},
+					-- refreshRate = {
+					-- 	order = 3,
+					-- 	type = "range",
+					-- 	name = "Refresh rate",
+					-- 	desc = "Fade check refresh rate",
+					-- 	min = 0.05,
+					-- 	max = 0.5,
+					-- 	step = 0.05,
+					-- 	get = function(info)
+					-- 		return E.db.BH.refreshRate
+					-- 	end,
+					-- 	set = function(info, value)
+					-- 		E.db.BH.refreshRate = value
+					-- 	end,
+					-- },
 				},
 			},
 			selectGroup = {
