@@ -234,6 +234,7 @@ function BH:GetOptions()
 						args = {
 							fadeEnabled = {
 								name = "Fade enable",
+								desc = "|cFFFF0000 May be heavy on CPU !",
 								order = 15,
 								type = 'toggle',
 								get = function(info)
