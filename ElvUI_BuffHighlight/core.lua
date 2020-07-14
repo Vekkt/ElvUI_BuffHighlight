@@ -52,8 +52,8 @@ end
 local function updateHealth(frame, spellID)
 	if not E.db.BH.spells[spellID] then return end
 
-	if E.db.BH.overwriteDBH and DebuffHighlighted(frame:GetParent()) then
-		frame:GetParent().DebuffHighlight:SetVertexColor(0, 0, 0, 0)
+	if E.db.BH.overwriteDBH and AuraHighlighted(frame:GetParent()) then
+		frame:GetParent().AuraHighlight:SetVertexColor(0, 0, 0, 0)
 		resetHealthBarColor(frame)
 		return
 	end
@@ -82,7 +82,7 @@ end
 local function updateFrame(frame, unit)
 	if not frame then return end
 	
-	if not E.db.BH.overwriteDBH and DebuffHighlighted(frame:GetParent()) then 
+	if not E.db.BH.overwriteDBH and AuraHighlighted(frame:GetParent()) then 
 		frame.BuffHighlightActive = false
 		frame.BuffHighlightFaderActive = false
 		
