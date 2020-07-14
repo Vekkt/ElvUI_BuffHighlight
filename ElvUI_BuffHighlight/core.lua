@@ -31,10 +31,10 @@ local function CheckBuff(unit)
 	end
 end
 
-local function DebuffHighlighted(frame)
-	if (not frame.DebuffHighlight) then return false end
+local function AuraHighlighted(frame)
+	if (not frame.AuraHighlight) then return false end
 	
-	local r, g, b, _ = frame.DebuffHighlight:GetVertexColor()
+	local r, g, b, _ = frame.AuraHighlight:GetVertexColor()
 	return r ~= 0 or g ~= 0 or b ~= 0
 end
 
