@@ -2,14 +2,14 @@ local E, L, V, P, G = unpack(ElvUI);
 local BH = E:NewModule('BuffHighlight', 'AceHook-3.0'); 
 local EP = LibStub("LibElvUIPlugin-1.0") 
 local UF = E:GetModule('UnitFrames')
-local addon = ... 
+local addon, ns = ... 
 
 
 --GLOBALS: hooksecurefunc
 local select, pairs, unpack = select, pairs, unpack
 
 local function isTracked(spellID)
-	for id, spell in pairs(E.db.BH.spells) do
+	for id, spell in pairs(E.db["BH"].spells) do
 		if spellID == tonumber(id) then
 			return spell.enabled
 		end
@@ -43,35 +43,29 @@ local function resetHealthBarColor(frame)
 	local r, g, b = colors.health.r, colors.health.g, colors.health.b
 	frame:SetStatusBarColor(r, g, b, 1.0)
 
-	if E.db.BH.colorBackdrop then
+	if E.db["BH"].colorBackdrop then
 		local m = frame.bg.multiplier
 		frame.bg:SetVertexColor(r * m, g * m, b * m)
 	end
 end
 
 local function updateHealth(frame, spellID)
-	if not E.db.BH.spells[spellID] then return end
-
-	if E.db.BH.overwriteDBH and AuraHighlighted(frame:GetParent()) then
-		frame:GetParent().AuraHighlight:SetVertexColor(0, 0, 0, 0)
-		resetHealthBarColor(frame)
-		return
-	end
+	if not E.db["BH"].spells[spellID] then return end
 
 	if frame.BuffHighlightActive then
-		local t = E.db.BH.spells[spellID].glowColor
+		local t = E.db["BH"].spells[spellID].glowColor
 		local r, g, b, a = t.r, t.g, t.b, t.a
 		
-		if E.db.BH.colorBackdrop then
+		if E.db["BH"].colorBackdrop then
 			local m = frame.bg.multiplier
 			frame.bg:SetVertexColor(r * m, g * m, b * m)
 		end
 		frame:SetStatusBarColor(r, g, b, a)
 	elseif frame.BuffHighlightFaderActive then
-		local t = E.db.BH.spells[spellID].fadeColor
+		local t = E.db["BH"].spells[spellID].fadeColor
 		local r, g, b, a = t.r, t.g, t.b, t.a
 
-		if E.db.BH.colorBackdrop then 
+		if E.db["BH"].colorBackdrop then 
 			local m = frame.bg.multiplier
 			frame.bg:SetVertexColor(r * m, g * m, b * m)
 		end
@@ -82,7 +76,7 @@ end
 local function updateFrame(frame, unit)
 	if not frame then return end
 	
-	if not E.db.BH.overwriteDBH and AuraHighlighted(frame:GetParent()) then 
+	if AuraHighlighted(frame:GetParent()) then 
 		frame.BuffHighlightActive = false
 		frame.BuffHighlightFaderActive = false
 		
@@ -100,8 +94,8 @@ local function updateFrame(frame, unit)
 	end
 
 
-	if not E.db.BH.spells[spellID] then return end
-	if (buffDuration > E.db.BH.spells[spellID].fadeThreshold) or not E.db.BH.spells[spellID].fadeEnabled then
+	if not E.db["BH"].spells[spellID] then return end
+	if (buffDuration > E.db["BH"].spells[spellID].fadeThreshold) or not E.db["BH"].spells[spellID].fadeEnabled then
 		frame.BuffHighlightActive = true
 		frame.BuffHighlightFaderActive = false
 	else
@@ -119,32 +113,8 @@ local function usingClassColor()
 	end
 end
 
-function BH:Initialize()
-	if not E.private.unitframe.enable or usingClassColor() then return end
-
-	for name, header in pairs(UF.headers) do
-		if name ~= "tank" and name ~= "assist" then
-			for i = 1, header:GetNumChildren() do
-				local group = select(i, header:GetChildren())
-				for j = 1, group:GetNumChildren() do
-					local frame = select(j, group:GetChildren())
-					if frame and frame.Health and frame.unit then
-						hooksecurefunc(frame.Health, "PostUpdateColor", function(self, unit, ...)
-							updateFrame(self, unit) end)
-					end
-				end
-			end
-		end
-	end
-
-	if E.db.BH.enable and usingClassColor() then
-		print("|cff1784d1ElvUI|r |cff00b3ffBuffHighlight|r: You are currently using class heath colors. Please disable this option in order to BuffHilight to work. (UnitFrames > General Options > Colors > Class Health)")
-	end
-	EP:RegisterPlugin(addon, BH.GetOptions) 
-end
-
 local function Update()
-	if not E.db.BH.enable or usingClassColor() then return end
+	if not E.db["BH"].enable or usingClassColor() then return end
 	for name, header in pairs(UF.headers) do
 		if name ~= "tank" and name ~= "assist" then
 			for i = 1, header:GetNumChildren() do
@@ -169,6 +139,30 @@ local function BH_OnUpdate(self, elapsed)
 		Update()
 		timeSinceLastUpdate = timeSinceLastUpdate - updateInterval;
 	end
+end
+
+function BH:Initialize()
+	if not E.private.unitframe.enable or usingClassColor() then return end
+
+	for name, header in pairs(UF.headers) do
+		if name ~= "tank" and name ~= "assist" then
+			for i = 1, header:GetNumChildren() do
+				local group = select(i, header:GetChildren())
+				for j = 1, group:GetNumChildren() do
+					local frame = select(j, group:GetChildren())
+					if frame and frame.Health and frame.unit then
+						hooksecurefunc(frame.Health, "PostUpdateColor", function(self, unit, ...)
+							updateFrame(self, unit) end)
+					end
+				end
+			end
+		end
+	end
+
+	if E.db["BH"].enable and usingClassColor() then
+		print("|cff1784d1ElvUI|r |cff00b3ffBuffHighlight|r: You are currently using class heath colors. Please disable this option in order to BuffHilight to work. (UnitFrames > General Options > Colors > Class Health)")
+	end
+	EP:RegisterPlugin(addon, BH.GetOptions) 
 end
 
 local f = CreateFrame("Frame")

@@ -37,10 +37,10 @@ function BH:GetOptions()
 						name = "Enable",
 						desc = "Enable/Disable the buff highlight",
 						get = function(info)
-							return E.db.BH.enable
+							return E.db["BH"].enable
 						end,
 						set = function(info, value)
-							E.db.BH.enable = value
+							E.db["BH"].enable = value
 						end,
 					},
 					colorBackdrop = {
@@ -48,21 +48,10 @@ function BH:GetOptions()
 						type = "toggle",
 						name = "Colored backdrop",
 						get = function(info)
-							return E.db.BH.colorBackdrop
+							return E.db["BH"].colorBackdrop
 						end,
 						set = function(info, value)
-							E.db.BH.colorBackdrop = value
-						end,
-					},
-					overwriteDBH = {
-						order = 3,
-						type = "toggle",
-						name = "Overwrite debuff",
-						get = function(info)
-							return E.db.BH.overwriteDBH
-						end,
-						set = function(info, value)
-							E.db.BH.overwriteDBH = value
+							E.db["BH"].colorBackdrop = value
 						end,
 					},
 					-- refreshRate = {
@@ -74,10 +63,10 @@ function BH:GetOptions()
 					-- 	max = 0.5,
 					-- 	step = 0.05,
 					-- 	get = function(info)
-					-- 		return E.db.BH.refreshRate
+					-- 		return E.db["BH"].refreshRate
 					-- 	end,
 					-- 	set = function(info, value)
-					-- 		E.db.BH.refreshRate = value
+					-- 		E.db["BH"].refreshRate = value
 					-- 	end,
 					-- },
 				},
@@ -102,7 +91,7 @@ function BH:GetOptions()
 							selectedSpell = (spellName and value) or nil
 							if not selectedSpell then return end
 							
-							E.db.BH.spells[value] = {
+							E.db["BH"].spells[value] = {
 								["enabled"] = true,
 								["fadeEnabled"] = true,
 								["fadeThreshold"] = 5,
@@ -129,7 +118,7 @@ function BH:GetOptions()
 							selectedSpell = (value ~= '' and value) or nil
 						end,
 						values = function()
-							local list = E.db.BH.spells
+							local list = E.db["BH"].spells
 	
 							if not list then return end
 							wipe(spellList)
@@ -161,7 +150,7 @@ function BH:GetOptions()
 							if not value then return end
 							selectedSpell = nil
 	
-							E.db.BH.spells[value] = nil
+							E.db["BH"].spells[value] = nil
 						end,
 						disabled = function()
 							local spell = GetSelectedSpell()
@@ -195,13 +184,13 @@ function BH:GetOptions()
 									local spell = GetSelectedSpell()
 									if not spell then return end
 			
-									return E.db.BH.spells[spell].enabled
+									return E.db["BH"].spells[spell].enabled
 								end,
 								set = function(info, value)
 									local spell = GetSelectedSpell()
 									if not spell then return end
 			
-									E.db.BH.spells[spell].enabled = value
+									E.db["BH"].spells[spell].enabled = value
 								end,
 							},
 							glowColor = {
@@ -211,14 +200,14 @@ function BH:GetOptions()
 								hasAlpha = true,
 								get = function(info)
 									local spell = GetSelectedSpell()
-									local t = E.db.BH.spells[spell].glowColor
+									local t = E.db["BH"].spells[spell].glowColor
 									if t then
 										return t.r, t.g, t.b, t.a
 									end
 								end,
 								set = function(info, r, g, b, a)
 									local spell = GetSelectedSpell()
-									local t = E.db.BH.spells[spell].glowColor
+									local t = E.db["BH"].spells[spell].glowColor
 									if t then
 										t.r, t.g, t.b, t.a = r, g, b, a
 									end
@@ -241,13 +230,13 @@ function BH:GetOptions()
 									local spell = GetSelectedSpell()
 									if not spell then return end
 			
-									return E.db.BH.spells[spell].fadeEnabled
+									return E.db["BH"].spells[spell].fadeEnabled
 								end,
 								set = function(info, value)
 									local spell = GetSelectedSpell()
 									if not spell then return end
 			
-									E.db.BH.spells[spell].fadeEnabled = value
+									E.db["BH"].spells[spell].fadeEnabled = value
 								end,
 							},
 							fadeThreshold = {
@@ -261,12 +250,12 @@ function BH:GetOptions()
 								get = function(info)
 									local spell = GetSelectedSpell()
 									if not spell then return end
-									return E.db.BH.spells[spell].fadeThreshold
+									return E.db["BH"].spells[spell].fadeThreshold
 								end,
 								set = function(info, value)
 									local spell = GetSelectedSpell()
 									if not spell then return end
-									E.db.BH.spells[spell].fadeThreshold = value
+									E.db["BH"].spells[spell].fadeThreshold = value
 								end,
 							},
 							fadeColor = {
@@ -276,14 +265,14 @@ function BH:GetOptions()
 								hasAlpha = true,
 								get = function(info)
 									local spell = GetSelectedSpell()
-									local t = E.db.BH.spells[spell].fadeColor
+									local t = E.db["BH"].spells[spell].fadeColor
 									if t then
 										return t.r, t.g, t.b, t.a
 									end
 								end,
 								set = function(info, r, g, b, a)
 									local spell = GetSelectedSpell()
-									local t = E.db.BH.spells[spell].fadeColor
+									local t = E.db["BH"].spells[spell].fadeColor
 									if t then
 										t.r, t.g, t.b, t.a = r, g, b, a
 									end
