@@ -40,6 +40,8 @@ function BH:GetOptions()
 							return E.db["BH"].enable
 						end,
 						set = function(info, value)
+							if value then BH:enablePlugin()
+							else BH:disablePlugin() end
 							E.db["BH"].enable = value
 						end,
 					},
@@ -54,21 +56,21 @@ function BH:GetOptions()
 							E.db["BH"].colorBackdrop = value
 						end,
 					},
-					-- refreshRate = {
-					-- 	order = 3,
-					-- 	type = "range",
-					-- 	name = "Refresh rate",
-					-- 	desc = "Fade check refresh rate",
-					-- 	min = 0.05,
-					-- 	max = 0.5,
-					-- 	step = 0.05,
-					-- 	get = function(info)
-					-- 		return E.db["BH"].refreshRate
-					-- 	end,
-					-- 	set = function(info, value)
-					-- 		E.db["BH"].refreshRate = value
-					-- 	end,
-					-- },
+					refreshRate = {
+						order = 3,
+						type = "range",
+						name = "Refresh rate",
+						desc = "Fade check refresh rate",
+						min = 0.05,
+						max = 1,
+						step = 0.05,
+						get = function(info)
+							return E.db["BH"].refreshRate
+						end,
+						set = function(info, value)
+							E.db["BH"].refreshRate = value
+						end,
+					},
 				},
 			},
 			selectGroup = {
