@@ -1,4 +1,4 @@
-## Interface: 90002
+## Interface: 90100
 ## Author: Kaalos-Ysondre(FR)
 ## Version: 3.0
 ## Title: |cff1784d1ElvUI|r |cff00b3ffBuffHighlight|r
