@@ -1,7 +1,6 @@
 local E, L, V, P, G = unpack(ElvUI);
 local BH = E:GetModule('BuffHighlight');
-local UF = E:GetModule('UnitFrames');
-local addon = ...
+local addonName, _ = ...
 
 local selectedSpell, quickSearchText, spellList = nil, '', {}
 
@@ -14,7 +13,9 @@ local function GetSelectedSpell()
 	end
 end
 
-function BH:GetOptions()
+function BH:InsertOptions()
+	local version = format('|cff1784d1v%s|r', GetAddOnMetadata(addonName, 'Version'))
+
 	E.Options.args.BH = {
 		order = 100,
 		type = "group",
@@ -23,7 +24,7 @@ function BH:GetOptions()
 			title = {
 				order = 1,
 				type = "header",
-				name = "Buff Highlight",
+				name = format('|cff00b3ffBuffHighlight|r [%s] by |cfff48cbaKaalos|r', version),
 			},
 			addonOptions = {
 				order = 2,
@@ -37,12 +38,12 @@ function BH:GetOptions()
 						name = "Enable",
 						desc = "Enable/Disable the buff highlight",
 						get = function(info)
-							return E.db["BH"].enable
+							return E.db.BH.enable
 						end,
 						set = function(info, value)
 							if value then BH:enablePlugin()
 							else BH:disablePlugin() end
-							E.db["BH"].enable = value
+							E.db.BH.enable = value
 						end,
 					},
 					colorBackdrop = {
@@ -50,10 +51,10 @@ function BH:GetOptions()
 						type = "toggle",
 						name = "Colored backdrop",
 						get = function(info)
-							return E.db["BH"].colorBackdrop
+							return E.db.BH.colorBackdrop
 						end,
 						set = function(info, value)
-							E.db["BH"].colorBackdrop = value
+							E.db.BH.colorBackdrop = value
 						end,
 					},
 					refreshRate = {
@@ -65,10 +66,88 @@ function BH:GetOptions()
 						max = 1,
 						step = 0.05,
 						get = function(info)
-							return E.db["BH"].refreshRate
+							return E.db.BH.refreshRate
 						end,
 						set = function(info, value)
-							E.db["BH"].refreshRate = value
+							E.db.BH.refreshRate = value
+						end,
+					},
+				},
+			},
+			framesOptions = {
+				order = 3,
+				type = "group",
+				name = "Frames Options",
+				guiInline = true,
+				args = {
+					player = {
+						order = 1,
+						type = "toggle",
+						name = "Player",
+						desc = "Enable/Disable the buff highlight for the player frame",
+						width = "half",
+						get = function(info)
+							return E.db.BH.trackedHeaders.player
+						end,
+						set = function(info, value)
+							E.db.BH.trackedHeaders.player = value
+							if not value then BH:resetHeader("player") end
+						end,
+					},
+					target = {
+						order = 2,
+						type = "toggle",
+						name = "Target",
+						desc = "Enable/Disable the buff highlight for the target frame",
+						width = "half",
+						get = function(info)
+							return E.db.BH.trackedHeaders.target
+						end,
+						set = function(info, value)
+							E.db.BH.trackedHeaders.target = value
+							if not value then BH:resetHeader("target") end
+						end,
+					},
+					party = {
+						order = 3,
+						type = "toggle",
+						name = "Party",
+						desc = "Enable/Disable the buff highlight for the party frame",
+						width = "half",
+						get = function(info)
+							return E.db.BH.trackedHeaders.party
+						end,
+						set = function(info, value)
+							E.db.BH.trackedHeaders.party = value
+							if not value then BH:resetHeader("party") end
+						end,
+					},
+					raid = {
+						order = 4,
+						type = "toggle",
+						name = "Raid",
+						desc = "Enable/Disable the buff highlight for the raid frame",
+						width = "half",
+						get = function(info)
+							return E.db.BH.trackedHeaders.raid
+						end,
+						set = function(info, value)
+							E.db.BH.trackedHeaders.raid = value
+							if not value then BH:resetHeader("raid") end
+						end,
+					},
+					raid40 = {
+						order = 5,
+						type = "toggle",
+						name = "Raid40",
+						desc = "Enable/Disable the buff highlight for the raid40 frame",
+						width = "half",
+						get = function(info)
+							return E.db.BH.trackedHeaders.raid40
+						end,
+						set = function(info, value)
+							E.db.BH.trackedHeaders.raid40 = value
+							if not value then BH:resetHeader("raid40") end
 						end,
 					},
 				},
@@ -92,8 +171,7 @@ function BH:GetOptions()
 							local spellName = GetSpellInfo(value)
 							selectedSpell = (spellName and value) or nil
 							if not selectedSpell then return end
-							
-							E.db["BH"].spells[value] = {
+							E.db.BH.spells[value] = {
 								["enabled"] = true,
 								["fadeEnabled"] = true,
 								["fadeThreshold"] = 5,
@@ -120,25 +198,20 @@ function BH:GetOptions()
 							selectedSpell = (value ~= '' and value) or nil
 						end,
 						values = function()
-							local list = E.db["BH"].spells
-	
+							local list = E.db.BH.spells
 							if not list then return end
 							wipe(spellList)
-	
 							local searchText = quickSearchText:lower()
 							for id, spell in pairs(list) do
 								local spellName = tonumber(id) and GetSpellInfo(id)
 								local name = (spellName and format("%s |cFF888888(%s)|r", spellName, id)) or tostring(id)
-	
 								if name:lower():find(searchText) then
 									spellList[id] = name
 								end
 							end
-	
 							if not next(spellList) then
 								spellList[''] = "NONE"
 							end
-	
 							return spellList
 						end,
 					},
@@ -151,8 +224,7 @@ function BH:GetOptions()
 							local value = GetSelectedSpell()
 							if not value then return end
 							selectedSpell = nil
-	
-							E.db["BH"].spells[value] = nil
+							E.db.BH.spells[value] = nil
 						end,
 						disabled = function()
 							local spell = GetSelectedSpell()
@@ -185,14 +257,12 @@ function BH:GetOptions()
 								get = function(info)
 									local spell = GetSelectedSpell()
 									if not spell then return end
-			
-									return E.db["BH"].spells[spell].enabled
+									return E.db.BH.spells[spell].enabled
 								end,
 								set = function(info, value)
 									local spell = GetSelectedSpell()
 									if not spell then return end
-			
-									E.db["BH"].spells[spell].enabled = value
+									E.db.BH.spells[spell].enabled = value
 								end,
 							},
 							glowColor = {
@@ -202,14 +272,14 @@ function BH:GetOptions()
 								hasAlpha = true,
 								get = function(info)
 									local spell = GetSelectedSpell()
-									local t = E.db["BH"].spells[spell].glowColor
+									local t = E.db.BH.spells[spell].glowColor
 									if t then
 										return t.r, t.g, t.b, t.a
 									end
 								end,
 								set = function(info, r, g, b, a)
 									local spell = GetSelectedSpell()
-									local t = E.db["BH"].spells[spell].glowColor
+									local t = E.db.BH.spells[spell].glowColor
 									if t then
 										t.r, t.g, t.b, t.a = r, g, b, a
 									end
@@ -231,14 +301,14 @@ function BH:GetOptions()
 								get = function(info)
 									local spell = GetSelectedSpell()
 									if not spell then return end
-			
-									return E.db["BH"].spells[spell].fadeEnabled
+									return E.db.BH.spells[spell].fadeEnabled
 								end,
 								set = function(info, value)
 									local spell = GetSelectedSpell()
 									if not spell then return end
-			
-									E.db["BH"].spells[spell].fadeEnabled = value
+									E.db.BH.spells[spell].fadeEnabled = value
+									if value then BH:disableOnAura()
+									else BH:enableOnAura() end
 								end,
 							},
 							fadeThreshold = {
@@ -252,12 +322,12 @@ function BH:GetOptions()
 								get = function(info)
 									local spell = GetSelectedSpell()
 									if not spell then return end
-									return E.db["BH"].spells[spell].fadeThreshold
+									return E.db.BH.spells[spell].fadeThreshold
 								end,
 								set = function(info, value)
 									local spell = GetSelectedSpell()
 									if not spell then return end
-									E.db["BH"].spells[spell].fadeThreshold = value
+									E.db.BH.spells[spell].fadeThreshold = value
 								end,
 							},
 							fadeColor = {
@@ -267,14 +337,14 @@ function BH:GetOptions()
 								hasAlpha = true,
 								get = function(info)
 									local spell = GetSelectedSpell()
-									local t = E.db["BH"].spells[spell].fadeColor
+									local t = E.db.BH.spells[spell].fadeColor
 									if t then
 										return t.r, t.g, t.b, t.a
 									end
 								end,
 								set = function(info, r, g, b, a)
 									local spell = GetSelectedSpell()
-									local t = E.db["BH"].spells[spell].fadeColor
+									local t = E.db.BH.spells[spell].fadeColor
 									if t then
 										t.r, t.g, t.b, t.a = r, g, b, a
 									end
