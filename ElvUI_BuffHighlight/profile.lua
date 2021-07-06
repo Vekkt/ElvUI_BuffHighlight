@@ -5,4 +5,11 @@ P["BH"] = {
 	["colorBackdrop"] = false,
 	["spells"] = {},
 	["refreshRate"] = 0.1,
+	["trackedHeaders"] = {
+		["party"]  = true,
+		["raid"]   = true,
+		["raid40"] = true,
+		["player"] = false,
+		["target"] = false,
+	}
 }
