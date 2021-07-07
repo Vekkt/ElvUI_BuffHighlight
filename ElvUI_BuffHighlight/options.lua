@@ -57,8 +57,22 @@ function BH:InsertOptions()
 							E.db.BH.colorBackdrop = value
 						end,
 					},
-					refreshRate = {
+					fadeEnabled = {
+						name = "Fade enable",
+						desc = "|cFFFF0000 May be heavy on CPU !",
 						order = 3,
+						type = 'toggle',
+						get = function(info)
+							return E.db.BH.fadeEnabled
+						end,
+						set = function(info, value)
+							E.db.BH.fadeEnabled = value
+							if value then BH:disableOnAura()
+							else BH:enableOnAura() end
+						end,
+					},
+					refreshRate = {
+						order = 4,
 						type = "range",
 						name = "Refresh rate",
 						desc = "Fade check refresh rate",
@@ -293,24 +307,6 @@ function BH:InsertOptions()
 						name = 'Fade options',
 						guiInline = true,
 						args = {
-							fadeEnabled = {
-								name = "Fade enable",
-								desc = "|cFFFF0000 May be heavy on CPU !",
-								order = 15,
-								type = 'toggle',
-								get = function(info)
-									local spell = GetSelectedSpell()
-									if not spell then return end
-									return E.db.BH.spells[spell].fadeEnabled
-								end,
-								set = function(info, value)
-									local spell = GetSelectedSpell()
-									if not spell then return end
-									E.db.BH.spells[spell].fadeEnabled = value
-									if value then BH:disableOnAura()
-									else BH:enableOnAura() end
-								end,
-							},
 							fadeThreshold = {
 								order = 16,
 								type = "range",
