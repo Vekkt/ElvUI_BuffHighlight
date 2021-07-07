@@ -278,14 +278,12 @@ function BH:enablePlugin()
 end
 
 function BH:enableOnAura()
-	print("enabled on aura")
 	BH:disablePlugin()
 	f:RegisterEvent('UNIT_AURA')
 	BH:resetAllHeaders()
 end
 
 function BH:disableOnAura()
-	print("disabled on aura")
 	f:UnregisterEvent('UNIT_AURA')
 	BH:enablePlugin()
 	BH:resetAllHeaders()
