@@ -217,17 +217,9 @@ local function BH_OnUpdate(self, elapsed)
 	end
 end
 
-function BH:Initialize()
-	if not E.private.unitframe.enable then 
-		return 
-	end
-	if  usingClassColor() then
-		print([[
-			|cff1784d1ElvUI|r |cff00b3ffBuffHighlight|r: 
-			You are currently using class heath colors. Please 
-			disable this option in order to BuffHilight to work. 
-			(UnitFrames > General Options > Colors > Class Health)
-		]])
+local function hookToUnitframes()
+	if not UF.player then
+		E:Delay(1, hookToUnitframes)
 		return
 	end
 
@@ -247,7 +239,7 @@ function BH:Initialize()
 			end
 		end
 	end
-
+		
 	hooksecurefunc(
 		UF.player.Health,
 		"PostUpdateColor",
@@ -259,6 +251,23 @@ function BH:Initialize()
 		"PostUpdateColor",
 		function(self, unit, ...) updateFrame(self, unit) end
 	)
+end
+
+function BH:Initialize()
+	if not E.private.unitframe.enable then 
+		return 
+	end
+	if  usingClassColor() then
+		print([[
+			|cff1784d1ElvUI|r |cff00b3ffBuffHighlight|r: 
+			You are currently using class heath colors. Please 
+			disable this option in order to BuffHilight to work. 
+			(UnitFrames > General Options > Colors > Class Health)
+		]])
+		return
+	end
+	
+	hookToUnitframes()
 
 	EP:RegisterPlugin(addonName, BH:InsertOptions())
 end
