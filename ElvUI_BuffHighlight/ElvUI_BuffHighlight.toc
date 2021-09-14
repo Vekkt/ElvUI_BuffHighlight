@@ -1,6 +1,6 @@
 ## Interface: 90100
 ## Author: Kaalos-Ysondre(FR)
-## Version: 4.0
+## Version: 4.1
 ## Title: |cff1784d1ElvUI|r |cff00b3ffBuffHighlight|r
 ## Notes: Simple ElvUI plugin that allows to highlight group frames when a unit is buffed.
 ## RequiredDeps: ElvUI
