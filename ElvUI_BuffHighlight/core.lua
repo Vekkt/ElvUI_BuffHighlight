@@ -43,7 +43,7 @@ end
 -- Check wether ElvUI is already highlighting an aura
 local function AuraHighlighted(frame)
 	if (not frame.AuraHighlight) then return false end
-	
+
 	local r, g, b, _ = frame.AuraHighlight:GetVertexColor()
 	return r ~= 0 or g ~= 0 or b ~= 0
 end
@@ -91,7 +91,7 @@ function BH:resetAllHeaders()
 end
 
 
--- Update the health color for the frame 
+-- Update the health color for the frame
 -- and the buff specified.
 local function updateHealth(health, spellID)
 	if not E.db.BH.spells[spellID] then return end
@@ -100,7 +100,7 @@ local function updateHealth(health, spellID)
 		-- Get highlight color for the spell
 		local t = E.db.BH.spells[spellID].glowColor
 		local r, g, b, a = t.r, t.g, t.b, t.a
-		
+
 		-- Highlight the health backdrop if enabled
 		if E.db.BH.colorBackdrop then
 			local m = health.bg.multiplier
@@ -224,32 +224,42 @@ local function hookToUnitframes()
 	end
 
 	for _, name in pairs(HEADERS) do
-		local header = UF.headers[name]
-		for i = 1, header:GetNumChildren() do
-			local group = select(i, header:GetChildren())
-			for j = 1, group:GetNumChildren() do
-				local frame = select(j, group:GetChildren())
-				if frame and frame.Health and frame.unit then
-					hooksecurefunc(
-						frame.Health,
-						"PostUpdateColor",
-						function(self, unit, ...) updateFrame(self, unit) end
-					)
+		if E.db.BH.trackedHeaders[name] then
+			local header = UF.headers[name]
+			for i = 1, header:GetNumChildren() do
+				local group = select(i, header:GetChildren())
+				for j = 1, group:GetNumChildren() do
+					local frame = select(j, group:GetChildren())
+					if frame and frame.Health and frame.unit then
+						hooksecurefunc(
+							frame.Health,
+							"PostUpdateColor",
+							function(self, unit, ...) updateFrame(self, unit) end
+						)
+					end
 				end
 			end
 		end
 	end
-		
+
 	hooksecurefunc(
 		UF.player.Health,
 		"PostUpdateColor",
-		function(self, unit, ...) updateFrame(self, unit) end
+		function(self, unit, ...) 
+			if E.db.BH.trackedHeaders.player then
+				updateFrame(self, unit)
+			end
+		end
 	)
-	
+
 	hooksecurefunc(
 		UF.target.Health,
 		"PostUpdateColor",
-		function(self, unit, ...) updateFrame(self, unit) end
+		function(self, unit, ...) 
+			if E.db.BH.trackedHeaders.target then
+				updateFrame(self, unit)
+			end
+		end
 	)
 end
 
