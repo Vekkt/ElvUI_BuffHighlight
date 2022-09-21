@@ -328,7 +328,7 @@ function BH:InsertOptions()
 								desc = "Time remaining at which the buff will fade",
 								min = 1,
 								max = 30,
-								step = 1,
+								step = 0.1,
 								get = function(info)
 									local spell = GetSelectedSpell()
 									if not spell then return end
