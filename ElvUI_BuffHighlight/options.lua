@@ -136,32 +136,46 @@ function BH:InsertOptions()
 							if not value then BH:resetHeader("party") end
 						end,
 					},
-					raid = {
+					raid1 = {
 						order = 4,
 						type = "toggle",
-						name = "Raid",
-						desc = "Enable/Disable the buff highlight for the raid frame",
+						name = "Raid1",
+						desc = "Enable/Disable the buff highlight for the raid1 frame",
 						width = "half",
 						get = function(info)
 							return E.db.BH.trackedHeaders.raid
 						end,
 						set = function(info, value)
-							E.db.BH.trackedHeaders.raid = value
-							if not value then BH:resetHeader("raid") end
+							E.db.BH.trackedHeaders.raid1 = value
+							if not value then BH:resetHeader("raid1") end
 						end,
 					},
-					raid40 = {
-						order = 5,
+					raid2 = {
+						order = 4,
 						type = "toggle",
-						name = "Raid40",
-						desc = "Enable/Disable the buff highlight for the raid40 frame",
+						name = "Raid2",
+						desc = "Enable/Disable the buff highlight for the raid2 frame",
 						width = "half",
 						get = function(info)
-							return E.db.BH.trackedHeaders.raid40
+							return E.db.BH.trackedHeaders.raid
 						end,
 						set = function(info, value)
-							E.db.BH.trackedHeaders.raid40 = value
-							if not value then BH:resetHeader("raid40") end
+							E.db.BH.trackedHeaders.raid2 = value
+							if not value then BH:resetHeader("raid2") end
+						end,
+					},
+					raid3 = {
+						order = 5,
+						type = "toggle",
+						name = "Raid3",
+						desc = "Enable/Disable the buff highlight for the raid3 frame",
+						width = "half",
+						get = function(info)
+							return E.db.BH.trackedHeaders.raid3
+						end,
+						set = function(info, value)
+							E.db.BH.trackedHeaders.raid3 = value
+							if not value then BH:resetHeader("raid3") end
 						end,
 					},
 				},

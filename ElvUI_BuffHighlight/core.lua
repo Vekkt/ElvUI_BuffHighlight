@@ -10,8 +10,9 @@ local GetAddOnMetadata  = GetAddOnMetadata
 -- Highlighted group frames
 HEADERS = {
 	"party",
-	"raid",
-	"raid40"
+	"raid1",
+	"raid2",
+	"raid3"
 }
 
 -- Checks wether the specified spell
@@ -172,7 +173,7 @@ local function usingClassColor()
 end
 
 -- Update function. Cycles through all unitframes
--- in party, raid and raid 40 groups. 
+-- in party, raid1, raid2 and raid3 groups. 
 -- Roughly called every 0.1s
 -- For better performances, it should be called on
 -- the event "AURA_APPLIED". But the fading effect won't work
