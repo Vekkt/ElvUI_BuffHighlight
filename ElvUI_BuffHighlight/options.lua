@@ -143,7 +143,7 @@ function BH:InsertOptions()
 						desc = "Enable/Disable the buff highlight for the raid1 frame",
 						width = "half",
 						get = function(info)
-							return E.db.BH.trackedHeaders.raid
+							return E.db.BH.trackedHeaders.raid1
 						end,
 						set = function(info, value)
 							E.db.BH.trackedHeaders.raid1 = value
@@ -157,7 +157,7 @@ function BH:InsertOptions()
 						desc = "Enable/Disable the buff highlight for the raid2 frame",
 						width = "half",
 						get = function(info)
-							return E.db.BH.trackedHeaders.raid
+							return E.db.BH.trackedHeaders.raid2
 						end,
 						set = function(info, value)
 							E.db.BH.trackedHeaders.raid2 = value
