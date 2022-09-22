@@ -151,7 +151,7 @@ function BH:InsertOptions()
 						end,
 					},
 					raid2 = {
-						order = 4,
+						order = 5,
 						type = "toggle",
 						name = "Raid2",
 						desc = "Enable/Disable the buff highlight for the raid2 frame",
@@ -165,7 +165,7 @@ function BH:InsertOptions()
 						end,
 					},
 					raid3 = {
-						order = 5,
+						order = 6,
 						type = "toggle",
 						name = "Raid3",
 						desc = "Enable/Disable the buff highlight for the raid3 frame",
