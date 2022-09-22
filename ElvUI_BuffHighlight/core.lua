@@ -137,7 +137,6 @@ local function updateFrame(health, unit)
 
 	-- Check if a buff is on the unit
 	local buffDuration, spellID = CheckBuff(unit)
-	if not E.db.BH.spells[spellID] then return end
 	
 	-- If not, disable the buff highlight if there was any
 	if ((health.BuffHighlightActive or health.BuffHighlightFaderActive)
@@ -150,6 +149,7 @@ local function updateFrame(health, unit)
 	end
 
 	-- Enable the buff highlight or fade effect for this frame
+	if not E.db.BH.spells[spellID] then return end
 	if ((buffDuration > E.db.BH.spells[spellID].fadeThreshold) 
 		or not E.db.BH.spells[spellID].fadeEnabled) then
 			health.BuffHighlightActive = true
