@@ -10,8 +10,9 @@ local GetAddOnMetadata  = GetAddOnMetadata
 -- Highlighted group frames
 HEADERS = {
 	"party",
-	"raid",
-	"raid40"
+	"raid1",
+	"raid2",
+	"raid3"
 }
 
 -- Checks wether the specified spell
@@ -136,7 +137,6 @@ local function updateFrame(health, unit)
 
 	-- Check if a buff is on the unit
 	local buffDuration, spellID = CheckBuff(unit)
-	if not E.db.BH.spells[spellID] then return end
 	
 	-- If not, disable the buff highlight if there was any
 	if ((health.BuffHighlightActive or health.BuffHighlightFaderActive)
@@ -149,6 +149,7 @@ local function updateFrame(health, unit)
 	end
 
 	-- Enable the buff highlight or fade effect for this frame
+	if not E.db.BH.spells[spellID] then return end
 	if ((buffDuration > E.db.BH.spells[spellID].fadeThreshold) 
 		or not E.db.BH.spells[spellID].fadeEnabled) then
 			health.BuffHighlightActive = true
@@ -172,7 +173,7 @@ local function usingClassColor()
 end
 
 -- Update function. Cycles through all unitframes
--- in party, raid and raid 40 groups. 
+-- in party, raid1, raid2 and raid3 groups. 
 -- Roughly called every 0.1s
 -- For better performances, it should be called on
 -- the event "AURA_APPLIED". But the fading effect won't work

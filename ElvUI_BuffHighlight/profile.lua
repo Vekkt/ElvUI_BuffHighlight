@@ -8,8 +8,9 @@ P["BH"] = {
 	["refreshRate"] = 0.1,
 	["trackedHeaders"] = {
 		["party"]  = true,
-		["raid"]   = true,
-		["raid40"] = true,
+		["raid1"] = true,
+		["raid2"] = true,
+		["raid3"] = true,
 		["player"] = false,
 		["target"] = false,
 	}
