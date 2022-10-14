@@ -163,14 +163,6 @@ local function updateFrame(health, unit)
 	updateHealth(health, spellID)
 end
 
---  Check wether class colors unitframes are
---  enabled or not. If yes, then do not enable the plugin
-local function usingClassColor()
-	local val = E.db.unitframe.colors.healthclass
-	if val ~= nil then
-		return val
-	end
-end
 
 -- Update function. Cycles through all unitframes
 -- in party, raid1, raid2 and raid3 groups. 
@@ -264,15 +256,6 @@ end
 function BH:Initialize()
 	if not E.private.unitframe.enable then 
 		return 
-	end
-	if  usingClassColor() then
-		print([[
-			|cff1784d1ElvUI|r |cff00b3ffBuffHighlight|r: 
-			You are currently using class heath colors. Please 
-			disable this option in order to BuffHilight to work. 
-			(UnitFrames > General Options > Colors > Class Health)
-		]])
-		return
 	end
 	
 	hookToUnitframes()
